@@ -45,7 +45,8 @@ class Agent:
         }
 
     def utility(self, state, world_state):
-        """compute the utility of a given state"""
+        """compute the utility of a given state.
+        more negative, the worse. the higher, the better."""
         # as temperature goes up, utility goes down,
         #   inversely proportional to heat tolerance
         a = -(world_state['temperature']/self.heat_tolerance)
@@ -64,7 +65,7 @@ class Agent:
         world_state_copy = dict(world_state)
         return action(state_copy, world_state_copy)
 
-    def decide(self, world_state):
+    def decide(self, world_state, weighted=True):
         """decide an action, based on utilities
         resulting from potentially taking those actions"""
         utilities = {}
@@ -72,17 +73,16 @@ class Agent:
             next_state, next_world_state = self.successor(action, world_state)
             utilities[action] = self.utility(next_state, next_world_state)
 
-        # choose action with max utility
-        # action = max(utilities, key=lambda k: utilities[k])
-
-        # OR
-
-        # choose actions using utilities as probability distribution
-        # first, normalize utilities
-        utility_mass = sum(utilities.values())
-        utilities = {a: u/utility_mass for a, u in utilities.items()}
-        # then randomly choose action
-        action = weighted_choice(utilities)
+        if weighted:
+            # choose actions using utilities as probability distribution
+            # first, normalize utilities
+            utility_mass = sum(utilities.values())
+            utilities = {a: u/utility_mass for a, u in utilities.items()}
+            # then randomly choose action
+            action = weighted_choice(utilities)
+        else:
+            # choose action with max utility
+            action = max(utilities, key=lambda k: utilities[k])
         return action
 
     def execute(self, action, world_state):

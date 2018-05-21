@@ -11,11 +11,11 @@ Two possible actions an agent can take:
 
 Agent states are simple, consists of just their `room_temp` (room temperature).
 
-Agent parameters ("personalities") are their `heat_tolerance` and their `concern_for_environment`.
+Agent parameters ("personalities") are their `heat_tolerance` and their `concern_for_environment` (these are randomly initialized).
 
 ### Decision-making
 
-Agents decide what action take by (this is the `Agent.decide` method) the following:
+Agents decide what action take by the following (this is the `Agent.decide` method):
 
 - look at how each action will affect their internal state and the world state
 - compute their utility for these states
